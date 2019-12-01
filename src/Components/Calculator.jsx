@@ -1,6 +1,8 @@
 import React from 'react';
 import './Calculator.css';
 
+import Btn from './Button'
+
 const sum = (a, b) => a + b;
 const sub = (a, b) => a - b;
 const mul = (a, b) => a * b;
@@ -57,17 +59,25 @@ export default class Calculator extends React.Component {
         })
     }
 
+
     handleNumericalBtn = event => {
-        let screen = this.state.displayValue
+        let btnValue = event.target.innerText;
+        let screen = this.state.displayValue;
+
+        if (btnValue === '.' && (screen === '0' || this.state.expectingNewValue)) {
+            btnValue = '0.'
+        }
+
         if (screen === '0' || this.state.expectingNewValue) {
-            screen = event.target.innerText;
+            screen = btnValue;
             if (this.state.expectingNewValue) {
                 this.setState({
                     previousValue: this.state.displayValue,
-                    expectingNewValue: false})
+                    expectingNewValue: false
+                })
             }
         } else {
-            screen += event.target.innerText
+            screen += btnValue
         }
 
         this.setState({
@@ -76,6 +86,7 @@ export default class Calculator extends React.Component {
         })
     }
     
+
     handleResultBtn = () => {
         let arithmeticResult = doTheMath(this.state.operation, this.state.previousValue, this.state.displayValue);
         if (!arithmeticResult) {
@@ -92,6 +103,7 @@ export default class Calculator extends React.Component {
         })
     }
 
+
     handleResetBtn = event => {
         if (event.target.innerText === 'C') {
             this.setState({displayValue: '0'})
@@ -100,39 +112,42 @@ export default class Calculator extends React.Component {
         }
     }
 
+
     handlePercentBtn = () => {
         this.setState({displayValue: parseFloat(this.state.displayValue)/100})
     }
+
 
     handleSwitchSignBtn = () => {
         this.setState({displayValue: parseFloat(this.state.displayValue)*(-1)})
     }
 
+    
     //######################### RENDER ##########################
     render() {
         return(
             <div className='Calculator'>
                 <div className='resultDiv'>{this.state.displayValue}</div>
                 <div className='calculatorButtons'>
-                    <button className='button' onClick={this.handleResetBtn}>{this.state.reset}</button>
-                    <button className='button' onClick={this.handlePercentBtn}>%</button>
-                    <button className='button' onClick={this.handleSwitchSignBtn}>±</button>
-                    <button className='button orange' onClick={this.handleOperationBtn}>÷</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>7</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>8</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>9</button>
-                    <button className='button orange' onClick={this.handleOperationBtn}>x</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>4</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>5</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>6</button>
-                    <button className='button orange' onClick={this.handleOperationBtn}>-</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>1</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>2</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>3</button>
-                    <button className='button orange' onClick={this.handleOperationBtn}>+</button>
-                    <button id='zeroButton' className='button' onClick={this.handleNumericalBtn}>0</button>
-                    <button className='button' onClick={this.handleNumericalBtn}>.</button>
-                    <button className='button orange' onClick={this.handleResultBtn}>=</button>
+                    <Btn htmlClass='button' jsFunction={this.handleResetBtn} disValue={this.state.reset} />
+                    <Btn htmlClass='button' jsFunction={this.handlePercentBtn} disValue='%' />
+                    <Btn htmlClass='button' jsFunction={this.handleSwitchSignBtn} disValue='±' />
+                    <Btn htmlClass='button orange' jsFunction={this.handleOperationBtn} disValue='÷' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='7' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='8' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='9' />
+                    <Btn htmlClass='button orange' jsFunction={this.handleOperationBtn} disValue='x' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='4' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='5' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='6' />
+                    <Btn htmlClass='button orange' jsFunction={this.handleOperationBtn} disValue='-' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='1' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='2' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='3' />
+                    <Btn htmlClass='button orange' jsFunction={this.handleOperationBtn} disValue='+' />
+                    <Btn htmlId='zeroButton' htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='0' />
+                    <Btn htmlClass='button' jsFunction={this.handleNumericalBtn} disValue='.' />
+                    <Btn htmlClass='button orange' jsFunction={this.handleResultBtn} disValue='=' />
                 </div>
             </div>
         )
